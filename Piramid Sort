@@ -1,0 +1,59 @@
+/* Piramid Sort for a given number n and a sequence of n-length*/
+
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void siftDown(vector<int>& arr, int now, int n) {
+    int i = now;
+    int t = 0, t2 = 0;
+    while(((2*i + 1) <= n) && (arr[i] > arr[2*i] || arr[i] > arr[2*i + 1])) {
+        if (arr[2*i] > arr[2*i + 1]) {
+            t = 2 * i + 1;
+            t2 = 2 * i;
+        } else {
+            t = 2 * i;
+            t2 = 2 * i + 1;
+        }
+        int tochange = arr[i];
+        arr[i] = arr[t];
+        arr[t] = tochange;
+        i = t;
+    }
+    if (2*i <= n && (2*i +1) > n) {
+        if (arr[2*i] < arr[i]) {
+            t = 2*i;
+            int tochahge = arr[i];
+            arr[i] = arr[t];
+            arr[t] = tochahge;
+        }
+    }
+}
+
+void piramidaSort(vector<int>& arr, int n) {
+    for (int i = n / 2; i > 0; --i) {
+        siftDown(arr, i, n);
+    }
+    for (int i = n; i > 0; --i) {
+        int tochange = arr[1];
+        arr[1] = arr[i];
+        arr[i] = tochange;
+        siftDown(arr, 1, i - 1);
+    }
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector<int> arr(n + 1);
+    arr[0] = -2000000000;
+    for (int i = 1; i <= n; ++i) {
+        cin >> arr[i];
+    }
+    piramidaSort(arr, n);
+    for (int i = n; i >= 1; --i) {
+        cout << arr[i] << "\n";
+    }
+    return 0;
+}
