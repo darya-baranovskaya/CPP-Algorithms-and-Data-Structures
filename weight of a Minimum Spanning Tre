@@ -1,0 +1,55 @@
+/* Find a weight of a Minimum Spanning Tree from given graph (first we get |V| and |E|, than E)*/
+
+
+#include <iostream>
+#include <vector>
+#include <unordered_set>
+#include <queue>
+#include <tuple>
+using namespace std;
+int prima(vector<vector<int>>& graph) {
+    priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, std::greater<tuple<int, int, int>>> pr_q;
+    unordered_set<int> visited;
+    visited.insert(0);
+    for (int i = 0; i < graph.size(); ++i) {
+        pr_q.push(make_tuple(graph[0][i], 0, i));
+    }
+    int answ = 0;
+    while (visited.size() != graph.size()) {
+        tuple<int, int, int> w = pr_q.top();
+        if (visited.find(get<1>(w)) != visited.end(), visited.find(get<2>(w)) == visited.end()) {
+            answ += get<0>(w);
+            visited.insert(get<2>(w));
+            pr_q.pop();
+            for (int i = 0; i < graph.size(); ++i) {
+                pr_q.push(make_tuple(graph[get<2>(w)][i], get<2>(w), i));
+            }
+        } else {
+            pr_q.pop();
+        }
+    }
+    return answ;
+}
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+    vector<vector<int>> graph;
+    for (int i = 0; i < n; ++i) {
+        vector<int> temp;
+        temp.reserve(n);
+        graph.push_back(temp);
+        for (int j = 0; j < n; ++j) {
+            graph[i].push_back(30003);
+        }
+    }
+    for (int i = 0; i < m; ++i) {
+        int v1, v2, w;
+        cin >> v1 >> v2 >> w;
+        graph[v1 - 1][v2 - 1] = w;
+        graph[v2 - 1][v1 - 1] = w;
+    }
+    int l = prima(graph);
+    cout << l;
+    return 0;
+}
